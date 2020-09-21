@@ -100,23 +100,22 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 99.5
  * 121.3
  */
+//Average O(nlogn) Worst O(n^2)
 fun sortTemperatures(inputName: String, outputName: String) {
-    val low = -2700
-    val high = 5000
-    val temps = File(inputName).readLines().map { it.replace(".", "").toInt() - low }.toIntArray()
-    val sorted = countingSort(temps, high - low)
+    val temps = File(inputName).readLines().map { it.replace(".", "").toInt() }.toIntArray()
+    quickSort(temps)
     File(outputName).bufferedWriter().use {
-        val iter = sorted.iterator();
+        val iter = temps.iterator()
         while (iter.hasNext()) {
-            val out = iter.next() + low
-            it.write("${out / 10}.${abs(out) % 10}")
-            println("${out / 10}.${abs(out) % 10}");
+            val out = iter.next()
+            if (out / 10 == 0 && out < 0) it.write("-")
+            it.write("${out / 10}.${abs(out % 10)}")
             it.newLine();
         }
 
     }
 }
-
+//По крайней мере это работает
 /**
  * Сортировка последовательности
  *
