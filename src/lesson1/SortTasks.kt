@@ -2,6 +2,9 @@
 
 package lesson1
 
+import java.io.File
+import kotlin.math.abs
+
 /**
  * Сортировка времён
  *
@@ -98,7 +101,20 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val low = -2700
+    val high = 5000
+    val temps = File(inputName).readLines().map { it.replace(".", "").toInt() - low }.toIntArray()
+    val sorted = countingSort(temps, high - low)
+    File(outputName).bufferedWriter().use {
+        val iter = sorted.iterator();
+        while (iter.hasNext()) {
+            val out = iter.next() + low
+            it.write("${out / 10}.${abs(out) % 10}")
+            println("${out / 10}.${abs(out) % 10}");
+            it.newLine();
+        }
+
+    }
 }
 
 /**
