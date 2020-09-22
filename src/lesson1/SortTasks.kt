@@ -108,13 +108,12 @@ fun sortTemperatures(inputName: String, outputName: String) {
     val temps = File(inputName).readLines().map { it.replace(".", "").toInt() - low }.toIntArray()
     val sorted = countingSort(temps, high - low)
     File(outputName).bufferedWriter().use {
-        val iter = sorted.iterator();
+        val iter = sorted.iterator()
         while (iter.hasNext()) {
             val out = iter.next() + low
             if (out / 10 == 0 && out < 0) it.write("-")
             it.write("${out / 10}.${abs(out) % 10}")
-            //println("${out / 10}.${abs(out) % 10}");
-            it.newLine();
+            it.newLine()
         }
 
     }
@@ -149,9 +148,37 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  * 2
  */
+//Память О(N)
+//Время O(N)
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val list = File(inputName).readLines().map { it.toInt() }
+    val map = mutableMapOf<Int, Int>()
+    for (number in list) {
+        if (map[number] == null) {
+            map[number] = 0
+        } else
+            map[number] = map[number]!!.plus(1)
+
+    }
+    var frequent = map.entries.first()
+    for (element in map) {
+        if (element.value > frequent.value || (element.value == frequent.value && element.key < frequent.key)) {
+            frequent = element
+        }
+    }
+    File(outputName).bufferedWriter().use { writer ->
+        for (element in list.filter { it != frequent.key }) {
+            writer.write(element.toString())
+            writer.newLine()
+        }
+        for (i in 0..frequent.value) {
+            writer.write(frequent.key.toString())
+            writer.newLine()
+        }
+
+    }
 }
+
 
 /**
  * Соединить два отсортированных массива в один
