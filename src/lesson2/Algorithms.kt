@@ -2,6 +2,9 @@
 
 package lesson2
 
+import kotlin.math.floor
+import kotlin.math.sqrt
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -109,5 +112,22 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Единица простым числом не считается.
  */
 fun calcPrimesNumber(limit: Int): Int {
-    TODO()
+    if (limit <= 1) return 0
+    if (limit == 2) return 1
+    val sieve = Array(limit + 1) { true }
+    for (i in 2..floor(sqrt(limit.toDouble())).toInt()) {
+        if (sieve[i]) {
+            var j = (i) * (i)
+            while (j <= limit) {
+                sieve[j] = false
+                j += i
+            }
+        }
+
+    }
+    var result = 0
+    for (i in 2..limit) {
+        if (sieve[i]) result++
+    }
+    return result
 }
