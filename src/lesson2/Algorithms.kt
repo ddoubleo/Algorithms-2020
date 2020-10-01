@@ -111,6 +111,7 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Справка: простым считается число, которое делится нацело только на 1 и на себя.
  * Единица простым числом не считается.
  */
+
 fun calcPrimesNumber(limit: Int): Int {
     if (limit <= 1) return 0
     if (limit == 2) return 1
