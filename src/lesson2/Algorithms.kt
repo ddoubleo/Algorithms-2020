@@ -97,8 +97,38 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  */
+
+//Память О(mn)
+//Память О(mn)
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    if (first.isEmpty() || second.isEmpty()) {
+        return ""
+    }
+    if (first == second) {
+        return first
+    }
+    val matrix = arrayOfNulls<IntArray>(first.length)
+
+    var maxLength = 0
+    var maxI = 0
+
+    for (i in matrix.indices) {
+        matrix[i] = IntArray(second.length)
+        for (j in matrix[i]!!.indices) {
+            if (first[i] == second[j]) {
+                if (i != 0 && j != 0) {
+                    matrix[i]!![j] = matrix[i - 1]!![j - 1] + 1
+                } else {
+                    matrix[i]!![j] = 1
+                }
+                if (matrix[i]!![j] > maxLength) {
+                    maxLength = matrix[i]!![j]
+                    maxI = i
+                }
+            }
+        }
+    }
+    return first.substring(maxI - maxLength + 1, maxI + 1)
 }
 
 /**
@@ -111,7 +141,8 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Справка: простым считается число, которое делится нацело только на 1 и на себя.
  * Единица простым числом не считается.
  */
-
+//Память O(n)
+//Время O(n log(log n))
 fun calcPrimesNumber(limit: Int): Int {
     if (limit <= 1) return 0
     if (limit == 2) return 1
