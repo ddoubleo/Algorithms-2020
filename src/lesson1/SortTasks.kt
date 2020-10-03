@@ -157,8 +157,7 @@ fun sortSequence(inputName: String, outputName: String) {
         if (map[number] == null) {
             map[number] = 0
         } else
-            map[number] = map[number]!!.plus(1)
-
+            map[number] = map.getOrDefault(number, 0) + 1
     }
     var frequent = map.entries.first()
     for (element in map) {
