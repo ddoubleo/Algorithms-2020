@@ -118,7 +118,6 @@ fun sortTemperatures(inputName: String, outputName: String) {
 
     }
 }
-//По крайней мере это работает
 /**
  * Сортировка последовательности
  *
