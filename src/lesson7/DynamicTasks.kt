@@ -2,6 +2,10 @@
 
 package lesson7
 
+import java.lang.StringBuilder
+import kotlin.math.max
+
+
 /**
  * Наибольшая общая подпоследовательность.
  * Средняя
@@ -14,8 +18,37 @@ package lesson7
  * Если есть несколько самых длинных общих подпоследовательностей, вернуть любую из них.
  * При сравнении подстрок, регистр символов *имеет* значение.
  */
+
+// Время О(mn)
+// Память О(mn)
+
 fun longestCommonSubSequence(first: String, second: String): String {
-    TODO()
+    if (first.isEmpty() or second.isEmpty()) return ""
+    var m = first.length
+    var n = second.length
+    val l = Array(m + 1) { IntArray(n + 1) }
+    for (i in 0..m) {
+        for (j in 0..n) {
+            if (i == 0 || j == 0) l[i][j] = 0
+            else if (first[i - 1] == second[j - 1]) l[i][j] = l[i - 1][j - 1] + 1
+            else l[i][j] = max(l[i - 1][j], l[i][j - 1])
+        }
+    }
+    var index = l[m][n]
+    val lcs = CharArray(l[m][n])
+    while (m > 0 && n > 0) {
+        when {
+            first[m - 1] == second[n - 1] -> {
+                lcs[index - 1] = first[m - 1]
+                m--
+                n--
+                index--
+            }
+            l[m - 1][n] > l[m][n - 1] -> m--
+            else -> n--
+        }
+    }
+    return lcs.joinToString("")
 }
 
 /**
@@ -30,9 +63,34 @@ fun longestCommonSubSequence(first: String, second: String): String {
  * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
  * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
  */
+// Время О(n^2) Там еще по идее как-то за O(n log n) сделать, но меня пока только на такое хватило
+// Память О(n)
+
+
 fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
-    TODO()
+    val size = list.size
+    val lis = MutableList(size) { 1 }
+    val prev = MutableList(size) { -1 }
+    for (i in 0 until size) {
+        for (j in 0 until i) {
+            if (list[i] > list[j] && lis[i] < lis[j] + 1) {
+                lis[i] = lis[j] + 1
+                prev[i] = j
+            }
+        }
+    }
+    val length = lis.max()
+    var index = lis.indexOf(length)
+
+    val result = mutableListOf<Int>()
+    while (index != -1) {
+        result.add(0, list[index])
+        index = prev[index]
+    }
+    return result
+
 }
+
 
 /**
  * Самый короткий маршрут на прямоугольном поле.
