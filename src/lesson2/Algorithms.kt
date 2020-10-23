@@ -108,8 +108,7 @@ fun longestCommonSubstring(first: String, second: String): String {
         return first
     }
 
-    val matrix = Array<IntArray>(first.length) { intArrayOf() }
-    //val matrix = arrayOfNulls<IntArray>(first.length)
+    val matrix = Array(first.length) { intArrayOf() }
 
     var maxLength = 0
     var maxI = 0
