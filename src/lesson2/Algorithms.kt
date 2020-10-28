@@ -107,22 +107,23 @@ fun longestCommonSubstring(first: String, second: String): String {
     if (first == second) {
         return first
     }
-    val matrix = arrayOfNulls<IntArray>(first.length)
+
+    val matrix = Array(first.length) { intArrayOf() }
 
     var maxLength = 0
     var maxI = 0
 
     for (i in matrix.indices) {
         matrix[i] = IntArray(second.length)
-        for (j in matrix[i]!!.indices) {
+        for (j in matrix[i].indices) {
             if (first[i] == second[j]) {
                 if (i != 0 && j != 0) {
-                    matrix[i]!![j] = matrix[i - 1]!![j - 1] + 1
+                    matrix[i][j] = matrix[i - 1][j - 1] + 1
                 } else {
-                    matrix[i]!![j] = 1
+                    matrix[i][j] = 1
                 }
-                if (matrix[i]!![j] > maxLength) {
-                    maxLength = matrix[i]!![j]
+                if (matrix[i][j] > maxLength) {
+                    maxLength = matrix[i][j]
                     maxI = i
                 }
             }
