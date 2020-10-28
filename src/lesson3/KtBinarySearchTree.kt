@@ -6,11 +6,12 @@ import kotlin.math.max
 // attention: Comparable is supported but Comparator is not
 class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSortedSet<T> {
 
-    private class Node<T>(
-        val value: T
+    class Node<T>(
+        var value: T
     ) {
         var left: Node<T>? = null
         var right: Node<T>? = null
+        var parent: Node<T>? = null
     }
 
     private var root: Node<T>? = null
@@ -57,10 +58,12 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
             comparison < 0 -> {
                 assert(closest.left == null)
                 closest.left = newNode
+                newNode.parent = closest
             }
             else -> {
                 assert(closest.right == null)
                 closest.right = newNode
+                newNode.parent = closest
             }
         }
         size++
@@ -79,8 +82,78 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
      *
      * Средняя
      */
-    override fun remove(element: T): Boolean {
-        TODO()
+    private fun minNode(node: Node<T>): Node<T> {
+        var node1 = node
+        node1 = node1.left!!
+        while (node1.right != null) {
+            node1 = node1.right!!
+        }
+        return node1
+    }
+
+
+    private fun removeNoChildNode(closest: Node<T>): Boolean {
+        return if (closest.parent?.left == closest) {
+            closest.parent?.left = null
+            closest.parent = null
+            size--
+            true
+        } else {
+            closest.parent?.right = null
+            closest.parent = null
+            size--
+            true
+        }
+    }
+
+    private fun removeOneChildNode(child: Node<T>, parent: Node<T>): Boolean {
+        parent.left = child.left
+        parent.right = child.right
+        parent.value = child.value
+        child.parent = null
+        size--
+        return true
+    }
+
+    private fun removeTwoChildrenNode(closest: Node<T>): Boolean {
+        val replacementNode = minNode(closest)
+        if (replacementNode == closest.left) {
+            closest.value = replacementNode.value
+            closest.left = replacementNode.left
+            size--
+            return true
+        }
+        closest.value = replacementNode.value
+        if (replacementNode.left != null) {
+            removeOneChildNode(replacementNode.left!!, replacementNode)
+            size++
+        } else replacementNode.parent!!.right = null
+        replacementNode.parent = null
+
+        size--
+        return true
+    }
+
+
+    override fun remove(element: T): Boolean {  // С парой костылей но работает
+        val closest = find(element) ?: return false
+        if (closest.value != element) return false
+        val rightChild = closest.right
+        val leftChild = closest.left
+        return when {
+            (rightChild == null && leftChild == null) -> {
+                removeNoChildNode(closest)
+            }
+            (rightChild == null) -> {
+                removeOneChildNode(leftChild!!, closest)
+            }
+            (leftChild == null) -> {
+                removeOneChildNode(rightChild, closest)
+            }
+            else -> {
+                removeTwoChildrenNode(closest)
+            }
+        }
     }
 
     override fun comparator(): Comparator<in T>? =
@@ -90,6 +163,7 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
         BinarySearchTreeIterator()
 
     inner class BinarySearchTreeIterator internal constructor() : MutableIterator<T> {
+
 
         /**
          * Проверка наличия следующего элемента
@@ -102,8 +176,7 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
          * Средняя
          */
         override fun hasNext(): Boolean {
-            // TODO
-            throw NotImplementedError()
+            TODO()
         }
 
         /**
