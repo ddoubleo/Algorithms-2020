@@ -185,11 +185,13 @@ abstract class AbstractBinarySearchTreeTest {
             val iterator1 = binarySet.iterator()
             val iterator2 = binarySet.iterator()
             println("Checking if calling hasNext() changes the state of the iterator...")
+            var count = 0
             while (iterator1.hasNext()) {
                 assertEquals(
                     iterator2.next(), iterator1.next(),
                     "Calling BinarySearchTreeIterator.hasNext() changes the state of the iterator."
                 )
+                count++
             }
             val controlIter = controlSet.iterator()
             val binaryIter = binarySet.iterator()
