@@ -1,6 +1,8 @@
 package lesson3
 
+import java.lang.IllegalStateException
 import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.math.max
 
 // attention: Comparable is supported but Comparator is not
@@ -165,6 +167,11 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
     inner class BinarySearchTreeIterator internal constructor() : MutableIterator<T> {
 
 
+        //private val stack = Stack<Node<T>>()
+        private var temp: Node<T>? = minNode(root!!)
+        private var current: Node<T>? = null
+
+
         /**
          * Проверка наличия следующего элемента
          *
@@ -176,7 +183,7 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
          * Средняя
          */
         override fun hasNext(): Boolean {
-            TODO()
+            return temp == null
         }
 
         /**
@@ -193,8 +200,27 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
          * Средняя
          */
         override fun next(): T {
-            // TODO
-            throw NotImplementedError()
+            current = temp
+            temp = when {
+                root == null -> null
+                temp == null -> minNode(root!!)
+                else -> nextNode(temp!!.value)
+
+            }
+            if (!hasNext()) throw NoSuchElementException()
+            return current!!.value
+        }
+
+        private fun nextNode(element: T): Node<T>? {
+            var current = root
+            var successor: Node<T>? = null
+            while (current != null) {
+                if (current.value > element) {
+                    successor = current
+                    current = current.left
+                } else current = current.right
+            }
+            return successor
         }
 
         /**
@@ -210,8 +236,9 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
          * Сложная
          */
         override fun remove() {
-            // TODO
-            throw NotImplementedError()
+            if (current == null) throw IllegalStateException()
+            remove(current!!.value)
+            current = null
         }
 
     }
