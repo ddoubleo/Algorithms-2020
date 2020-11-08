@@ -205,7 +205,7 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
                 stack.push(current)
                 current = current?.left
             }
-            if (stack.isEmpty()) throw NoSuchElementException()
+            if (!hasNext()) throw NoSuchElementException()
             current = stack.pop()
             val result = current?.value
             prev = current
@@ -227,7 +227,20 @@ class KtBinarySearchTree<T : Comparable<T>> : AbstractMutableSet<T>(), Checkable
          */
         override fun remove() {
             if (prev == null) throw IllegalStateException()
-            remove(prev!!.value)
+            when {
+                (prev!!.right == null && prev!!.left == null) -> {
+                    removeNoChildNode(prev!!)
+                }
+                (prev!!.right == null) -> {
+                    removeOneChildNode(prev!!.left!!, prev!!)
+                }
+                (prev!!.left == null) -> {
+                    removeOneChildNode(prev!!.right!!, prev!!)
+                }
+                else -> {
+                    removeTwoChildrenNode(prev!!)
+                }
+            }
             prev = null
         }
 
