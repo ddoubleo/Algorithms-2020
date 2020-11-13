@@ -178,7 +178,7 @@ fun Graph.findVoyagingPathHeuristics(
             bestPathChanged = true
         }
         edgesPheromoneValue = edgesPheromoneValue.mapValues { it.value * (1 - ro) } as MutableMap<Graph.Edge, Double>
-        // Переписать, но пока что и так работает
+        // Ужасный костыль но я все еще не понял как это сделать адекватно
         count++
         if (bestPath != null) {
             for (currentCity in bestPath.vertices.minus(startingCity)) {
