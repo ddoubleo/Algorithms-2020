@@ -61,10 +61,10 @@ fun defaultPheromoneCalculation(graph: Graph): Double? {
 
 fun Graph.findVoyagingPathHeuristics(
     iterationNumber: Int,
-    alpha: Double = 0.5,
-    beta: Double = 1.0,
-    antNumber: Int = 15,
-    randomFactor: Double = 0.1,
+    alpha: Double = 0.1,
+    beta: Double = 2.0,
+    antNumber: Int = 10,
+    randomFactor: Double = 0.9,
     ro: Double = 0.1
 ): Path {
     var count = 0
