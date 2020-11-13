@@ -58,6 +58,8 @@ fun defaultPheromoneCalculation(graph: Graph): Double? {
     return 1 / (length * graph.vertices.size)
 }
 
+// Время О(antNumber * iterationNumber * кол-во вершин графа)
+// Память О(antNumber * (кол-во вершин графа + кол-во рёбер графа))
 
 fun Graph.findVoyagingPathHeuristics(
     iterationNumber: Int,
@@ -71,7 +73,7 @@ fun Graph.findVoyagingPathHeuristics(
     var bestPathChanged = false
     val startingCity = vertices.first()
     val defaultPheromone = defaultPheromoneCalculation(this) ?: 1.0
-    var edgesPheromoneValue = mutableMapOf<Graph.Edge, Double>()
+    val edgesPheromoneValue = mutableMapOf<Graph.Edge, Double>()
 
     class Ant(
         val graph: Graph,
