@@ -63,7 +63,7 @@ fun Graph.findVoyagingPathHeuristics(
     iterationNumber: Int,
     alpha: Double = 0.5,
     beta: Double = 1.0,
-    antNumber: Int = 10,
+    antNumber: Int = 15,
     randomFactor: Double = 0.1,
     ro: Double = 0.1
 ): Path {
@@ -198,6 +198,7 @@ fun Graph.findVoyagingPathHeuristics(
                 previousCity = currentCity
             }
         }
+        ants.forEach { it.clear() }
     }
     println(bestPath)
     return bestPath!!
