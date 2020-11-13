@@ -42,8 +42,6 @@ M. Dorigo and L. M. Gambardella, "Ant colony system: a cooperative learning appr
 in IEEE Transactions on Evolutionary Computation, vol. 1, no. 1, pp. 53-66, April 1997, doi: 10.1109/4235.585892.
  */
 
-
-// Наиболее оптимальное значение для количества феромона, производимого муравьями пре переходе это 1/(т)
 fun defaultPheromoneCalculation(graph: Graph): Double? {
     var length = 0.0
     var currentVertex = graph.vertices.first()
@@ -63,10 +61,10 @@ fun defaultPheromoneCalculation(graph: Graph): Double? {
 
 fun Graph.findVoyagingPathHeuristics(
     iterationNumber: Int,
-    alpha: Double = 0.1,
-    beta: Double = 2.0,
+    alpha: Double = 0.5,
+    beta: Double = 1.0,
     antNumber: Int = 10,
-    randomFactor: Double = 0.9,
+    randomFactor: Double = 0.1,
     ro: Double = 0.1
 ): Path {
     var count = 0
@@ -97,8 +95,6 @@ fun Graph.findVoyagingPathHeuristics(
                 if (probabilities.size == 1) return probabilities.keys.first()
                 val rand = Random.nextDouble(0.0, 1.0)
                 val probSorted = probabilities.toList().sortedBy { (_, value) -> value }.toMap()
-                //val probList = probSorted.flatMap { (key, values) -> listOf(key) + values }
-                //var minprob = 1.0
                 probSorted.forEach {
                     if (rand < it.value) return it.key
                 }
@@ -107,9 +103,6 @@ fun Graph.findVoyagingPathHeuristics(
             }
             return null
 
-            //edgesPheromoneValue[edge]!!.pow(alpha) * (1.0 / edge!!.weight).pow(beta)
-            //graph.getNeighbors(currentCity).filter { !visitedCities.contains(it) }
-            //                .maxBy { calculateProbability(currentCity, it) }
         }
 
         private fun calculateProbabilities(city: Graph.Vertex): Map<Graph.Vertex, Double> {
@@ -123,9 +116,6 @@ fun Graph.findVoyagingPathHeuristics(
                         overallImportance += currentImportance
                         probabilities[neighbour] = currentImportance
                     }
-
-                    // Согласно исследованию использование здесь дефолтного
-                    // значения - одно из самых оптимальных решений
                 }
             }
             if (probabilities.isEmpty()) return mapOf()
@@ -213,12 +203,6 @@ fun Graph.findVoyagingPathHeuristics(
     return bestPath!!
 
 }
-
-
-/*private operator fun <K, V> MutableMap<K, V>.set(key: Graph.Edge?, value: V) {
-    put(key, value)
-}*/
-
 
 
 
