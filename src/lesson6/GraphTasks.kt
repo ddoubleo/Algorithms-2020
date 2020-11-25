@@ -114,8 +114,25 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  *
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
  */
+
+// Время О(кол-во вершин + кол-во ребер)
+// Память О(кол-во вершин)
+
 fun Graph.longestSimplePath(): Path {
-    TODO()
+    var longestPath = Path()
+    val allPaths = mutableSetOf<Path>()
+    this.vertices.forEach { allPaths.add(Path(it)) }
+    while (allPaths.isNotEmpty()) {
+        val currentPath = allPaths.last()
+        if (longestPath.length < currentPath.length) longestPath = currentPath
+        val neighbours = this.getNeighbors(currentPath.vertices.last())
+        for (vertex in neighbours) {
+            if (currentPath.contains(vertex)) continue
+            else allPaths.add(Path(currentPath, this, vertex))
+        }
+        allPaths.remove(currentPath)
+    }
+    return longestPath
 }
 
 /**

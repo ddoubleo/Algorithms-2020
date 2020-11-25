@@ -50,7 +50,7 @@ abstract class AbstractHeuristicsTests {
             addConnection(b, d, 10)
             addConnection(c, e, 5)
         }.build()
-        val path = graph.findVoyagingPathHeuristics(1000)
+        val path = graph.findVoyagingPathHeuristics()
         assertEquals(105, path.length)
         val vertices = path.vertices
         assertEquals(vertices.first(), vertices.last(), "Voyaging path $vertices must be loop!")
