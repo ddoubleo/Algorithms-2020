@@ -90,8 +90,68 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
+private fun findPossibleResult(v: Graph.Vertex, checked: MutableSet<Graph.Vertex>, graph: Graph): Set<Graph.Vertex> {
+    val oddVertices = mutableSetOf<Graph.Vertex>()
+    val evenVertices = mutableSetOf<Graph.Vertex>()
+    val queue: ArrayDeque<Pair<Graph.Vertex, Boolean>> = ArrayDeque()
+    queue.addLast(Pair(v, true))
+
+    while (queue.size != 0) {
+        val currPair = queue.removeFirst()
+        val currVertex = currPair.first
+        val isOdd = currPair.second
+        checked.add(currVertex)
+
+        if (isOdd) oddVertices.add(currVertex)
+        else evenVertices.add(currVertex)
+
+        for (neighbour in graph.getNeighbors(currVertex)) {
+            if (!checked.contains(neighbour)) queue.addLast(Pair(neighbour, !isOdd))
+        }
+
+    }
+
+    return if (oddVertices.size >= evenVertices.size) oddVertices
+    else evenVertices
+}
+
+fun Graph.detectCycle(): Boolean {
+
+    val connections = mutableMapOf<Graph.Vertex, MutableSet<Graph.Vertex>>()
+    for (vertex in vertices) {
+        connections[vertex] = getNeighbors(vertex).toMutableSet()
+    }
+
+    val vertices = vertices.toMutableSet()
+
+    while (vertices.isNotEmpty()) {
+        val iterator = vertices.iterator()
+        var isFound = false
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+            if (connections[next]!!.size <= 1) {
+                iterator.remove()
+                connections.remove(next)
+                getNeighbors(next).forEach { connections[it]?.remove(next) }
+                isFound = true
+            }
+        }
+        if (!isFound) return true
+    }
+    return false
+}
+
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+
+    if (vertices.isEmpty()) return mutableSetOf()
+    require(!detectCycle())
+    val checked = mutableSetOf<Graph.Vertex>()
+    val result = mutableSetOf<Graph.Vertex>()
+
+    for (v in vertices) {
+        if (!checked.contains(v)) result.addAll(findPossibleResult(v, checked, this))
+    }
+    return result
 }
 
 /**
